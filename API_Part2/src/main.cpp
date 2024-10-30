@@ -7,8 +7,7 @@ void handleButtonPresses();
 
 void setup() {
     Serial.begin(115200);
-    delay(500); // Allow serial monitor to initialize
-    Serial.println("");
+    delay(2500); // Allow serial monitor to initialize
 
     // Initialize the system and buttons
     sysInit();
@@ -16,16 +15,15 @@ void setup() {
 
 void loop() {
     handleButtonPresses();
-    updateFromJson(); // Update LED states from JSON
     delay(1000); // Delay to avoid overwhelming requests
 }
 
 void handleButtonPresses() {
     if (checkButtonPressed(D3)) { // D3 for RGB button
-        sendRequest("update_rgb.php");
+        updateFromJson(true); // Indicate RGB LED update
     }
     
     if (checkButtonPressed(D5)) { // D5 for regular LED button
-        sendRequest("update_led.php");
+        updateFromJson(false); // Indicate regular LED update
     }
 }

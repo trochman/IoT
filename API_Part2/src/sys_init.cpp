@@ -11,30 +11,26 @@ const int buttonLedPin = 14; // GPIO14 (D5) for regular LED button
 
 void sysInit() {
     Serial.begin(115200);
+    WiFi.begin(ssid, password);
+
     pinMode(buttonRgbPin, INPUT_PULLUP); // Use internal pull-up resistor
     pinMode(buttonLedPin, INPUT_PULLUP); // Use internal pull-up resistor
-    WiFi.begin(ssid, password);
+    pinMode(buttonRgbPin, INPUT_PULLUP); // Use internal pull-up resistor
+    pinMode(buttonLedPin, INPUT_PULLUP); // Use internal pull-up resistor
+    pinMode(LED_PIN, OUTPUT);              // Set LED_PIN (D6) as OUTPUT
+    pinMode(RED_PIN, OUTPUT);               // Set RGB pins as OUTPUT
+    pinMode(GREEN_PIN, OUTPUT);
+    pinMode(BLUE_PIN, OUTPUT);
+    
+    // Initialize both the regular LED and RGB LED to be off
+    digitalWrite(LED_PIN, LOW);            // Turn off regular LED
+    analogWrite(RED_PIN, 0);               // Turn off RGB red channel
+    analogWrite(GREEN_PIN, 0);             // Turn off RGB green channel
+    analogWrite(BLUE_PIN, 0);              // Turn off RGB blue channel
     
     while (WiFi.status() != WL_CONNECTED) {
         delay(2000);
         Serial.println("Connecting to WiFi...");
     }
     Serial.println("Connected to WiFi!");
-}
-
-// Check button pressed
-bool checkButtonPressed(int buttonPin) {
-    static bool lastButtonState[2] = {HIGH, HIGH}; // Assume buttons are not pressed
-    int index = (buttonPin == buttonRgbPin) ? 0 : 1; // Determine index for button
-
-    bool currentButtonState = digitalRead(buttonPin);
-    
-    // Check for button press (transition from HIGH to LOW)
-    if (lastButtonState[index] == HIGH && currentButtonState == LOW) {
-        lastButtonState[index] = currentButtonState; // Update last state
-        return true; // Button pressed
-    }
-    
-    lastButtonState[index] = currentButtonState; // Update last state
-    return false; // Button not pressed
 }
